@@ -36,8 +36,27 @@ export interface EthbridgeQueryAllMetadataResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface EthbridgeQueryAllStateResponse {
+  state?: EthbridgeState[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface EthbridgeQueryGetMetadataResponse {
   metadata?: EthbridgeMetadata;
+}
+
+export interface EthbridgeQueryGetStateResponse {
+  state?: EthbridgeState;
 }
 
 /**
@@ -46,6 +65,14 @@ export interface EthbridgeQueryGetMetadataResponse {
 export interface EthbridgeQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: EthbridgeParams;
+}
+
+export interface EthbridgeState {
+  address?: string;
+  slot?: string;
+  balance?: string;
+  data?: string;
+  metadata?: EthbridgeMetadata;
 }
 
 export interface ProtobufAny {
@@ -371,6 +398,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<EthbridgeQueryParamsResponse, RpcStatus>({
       path: `/k-kaddal/omni/ethbridge/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryStateAll
+   * @summary Queries a list of State items.
+   * @request GET:/k-kaddal/omni/ethbridge/state
+   */
+  queryStateAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<EthbridgeQueryAllStateResponse, RpcStatus>({
+      path: `/k-kaddal/omni/ethbridge/state`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryState
+   * @summary Queries a State by index.
+   * @request GET:/k-kaddal/omni/ethbridge/state/{address}
+   */
+  queryState = (address: string, params: RequestParams = {}) =>
+    this.request<EthbridgeQueryGetStateResponse, RpcStatus>({
+      path: `/k-kaddal/omni/ethbridge/state/${address}`,
       method: "GET",
       format: "json",
       ...params,

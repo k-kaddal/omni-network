@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Params } from "../ethbridge/params";
 import { Metadata } from "../ethbridge/metadata";
+import { State } from "../ethbridge/state";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "kkaddal.omni.ethbridge";
@@ -8,8 +9,9 @@ export const protobufPackage = "kkaddal.omni.ethbridge";
 /** GenesisState defines the ethbridge module's genesis state. */
 export interface GenesisState {
   params: Params | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
   metadataList: Metadata[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  stateList: State[];
 }
 
 const baseGenesisState: object = {};
@@ -22,6 +24,9 @@ export const GenesisState = {
     for (const v of message.metadataList) {
       Metadata.encode(v!, writer.uint32(18).fork()).ldelim();
     }
+    for (const v of message.stateList) {
+      State.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -30,6 +35,7 @@ export const GenesisState = {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGenesisState } as GenesisState;
     message.metadataList = [];
+    message.stateList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,6 +44,9 @@ export const GenesisState = {
           break;
         case 2:
           message.metadataList.push(Metadata.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.stateList.push(State.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -50,6 +59,7 @@ export const GenesisState = {
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.metadataList = [];
+    message.stateList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -58,6 +68,11 @@ export const GenesisState = {
     if (object.metadataList !== undefined && object.metadataList !== null) {
       for (const e of object.metadataList) {
         message.metadataList.push(Metadata.fromJSON(e));
+      }
+    }
+    if (object.stateList !== undefined && object.stateList !== null) {
+      for (const e of object.stateList) {
+        message.stateList.push(State.fromJSON(e));
       }
     }
     return message;
@@ -74,12 +89,20 @@ export const GenesisState = {
     } else {
       obj.metadataList = [];
     }
+    if (message.stateList) {
+      obj.stateList = message.stateList.map((e) =>
+        e ? State.toJSON(e) : undefined
+      );
+    } else {
+      obj.stateList = [];
+    }
     return obj;
   },
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.metadataList = [];
+    message.stateList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -88,6 +111,11 @@ export const GenesisState = {
     if (object.metadataList !== undefined && object.metadataList !== null) {
       for (const e of object.metadataList) {
         message.metadataList.push(Metadata.fromPartial(e));
+      }
+    }
+    if (object.stateList !== undefined && object.stateList !== null) {
+      for (const e of object.stateList) {
+        message.stateList.push(State.fromPartial(e));
       }
     }
     return message;

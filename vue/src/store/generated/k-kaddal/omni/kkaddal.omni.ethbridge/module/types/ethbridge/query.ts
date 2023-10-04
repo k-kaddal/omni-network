@@ -6,6 +6,7 @@ import {
   PageRequest,
   PageResponse,
 } from "../cosmos/base/query/v1beta1/pagination";
+import { State } from "../ethbridge/state";
 
 export const protobufPackage = "kkaddal.omni.ethbridge";
 
@@ -32,6 +33,23 @@ export interface QueryAllMetadataRequest {
 
 export interface QueryAllMetadataResponse {
   metadata: Metadata[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetStateRequest {
+  address: string;
+}
+
+export interface QueryGetStateResponse {
+  state: State | undefined;
+}
+
+export interface QueryAllStateRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllStateResponse {
+  state: State[];
   pagination: PageResponse | undefined;
 }
 
@@ -440,6 +458,276 @@ export const QueryAllMetadataResponse = {
   },
 };
 
+const baseQueryGetStateRequest: object = { address: "" };
+
+export const QueryGetStateRequest = {
+  encode(
+    message: QueryGetStateRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetStateRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetStateRequest } as QueryGetStateRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStateRequest {
+    const message = { ...baseQueryGetStateRequest } as QueryGetStateRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address);
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStateRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryGetStateRequest>): QueryGetStateRequest {
+    const message = { ...baseQueryGetStateRequest } as QueryGetStateRequest;
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address;
+    } else {
+      message.address = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetStateResponse: object = {};
+
+export const QueryGetStateResponse = {
+  encode(
+    message: QueryGetStateResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.state !== undefined) {
+      State.encode(message.state, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetStateResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetStateResponse } as QueryGetStateResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.state = State.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStateResponse {
+    const message = { ...baseQueryGetStateResponse } as QueryGetStateResponse;
+    if (object.state !== undefined && object.state !== null) {
+      message.state = State.fromJSON(object.state);
+    } else {
+      message.state = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStateResponse): unknown {
+    const obj: any = {};
+    message.state !== undefined &&
+      (obj.state = message.state ? State.toJSON(message.state) : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetStateResponse>
+  ): QueryGetStateResponse {
+    const message = { ...baseQueryGetStateResponse } as QueryGetStateResponse;
+    if (object.state !== undefined && object.state !== null) {
+      message.state = State.fromPartial(object.state);
+    } else {
+      message.state = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStateRequest: object = {};
+
+export const QueryAllStateRequest = {
+  encode(
+    message: QueryAllStateRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllStateRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllStateRequest } as QueryAllStateRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStateRequest {
+    const message = { ...baseQueryAllStateRequest } as QueryAllStateRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStateRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<QueryAllStateRequest>): QueryAllStateRequest {
+    const message = { ...baseQueryAllStateRequest } as QueryAllStateRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStateResponse: object = {};
+
+export const QueryAllStateResponse = {
+  encode(
+    message: QueryAllStateResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.state) {
+      State.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllStateResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllStateResponse } as QueryAllStateResponse;
+    message.state = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.state.push(State.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStateResponse {
+    const message = { ...baseQueryAllStateResponse } as QueryAllStateResponse;
+    message.state = [];
+    if (object.state !== undefined && object.state !== null) {
+      for (const e of object.state) {
+        message.state.push(State.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStateResponse): unknown {
+    const obj: any = {};
+    if (message.state) {
+      obj.state = message.state.map((e) => (e ? State.toJSON(e) : undefined));
+    } else {
+      obj.state = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllStateResponse>
+  ): QueryAllStateResponse {
+    const message = { ...baseQueryAllStateResponse } as QueryAllStateResponse;
+    message.state = [];
+    if (object.state !== undefined && object.state !== null) {
+      for (const e of object.state) {
+        message.state.push(State.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -450,6 +738,10 @@ export interface Query {
   MetadataAll(
     request: QueryAllMetadataRequest
   ): Promise<QueryAllMetadataResponse>;
+  /** Queries a State by index. */
+  State(request: QueryGetStateRequest): Promise<QueryGetStateResponse>;
+  /** Queries a list of State items. */
+  StateAll(request: QueryAllStateRequest): Promise<QueryAllStateResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -492,6 +784,30 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllMetadataResponse.decode(new Reader(data))
+    );
+  }
+
+  State(request: QueryGetStateRequest): Promise<QueryGetStateResponse> {
+    const data = QueryGetStateRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "kkaddal.omni.ethbridge.Query",
+      "State",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetStateResponse.decode(new Reader(data))
+    );
+  }
+
+  StateAll(request: QueryAllStateRequest): Promise<QueryAllStateResponse> {
+    const data = QueryAllStateRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "kkaddal.omni.ethbridge.Query",
+      "StateAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllStateResponse.decode(new Reader(data))
     );
   }
 }

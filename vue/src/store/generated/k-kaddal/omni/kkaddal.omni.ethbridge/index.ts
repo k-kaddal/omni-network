@@ -2,9 +2,10 @@ import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { Metadata } from "./module/types/ethbridge/metadata"
 import { Params } from "./module/types/ethbridge/params"
+import { State } from "./module/types/ethbridge/state"
 
 
-export { Metadata, Params };
+export { Metadata, Params, State };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -45,10 +46,13 @@ const getDefaultState = () => {
 				Params: {},
 				Metadata: {},
 				MetadataAll: {},
+				State: {},
+				StateAll: {},
 				
 				_Structure: {
 						Metadata: getStructure(Metadata.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						State: getStructure(State.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -94,6 +98,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.MetadataAll[JSON.stringify(params)] ?? {}
+		},
+				getState: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.State[JSON.stringify(params)] ?? {}
+		},
+				getStateAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StateAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -194,6 +210,54 @@ export default {
 				return getters['getMetadataAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryMetadataAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryState({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryState( key.address)).data
+				
+					
+				commit('QUERY', { query: 'State', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryState', payload: { options: { all }, params: {...key},query }})
+				return getters['getState']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryState API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStateAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryStateAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryStateAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'StateAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStateAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getStateAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStateAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
