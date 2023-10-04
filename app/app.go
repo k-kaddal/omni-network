@@ -100,6 +100,9 @@ import (
 
 	"github.com/k-kaddal/omni/docs"
 
+	ethbridgemodule "github.com/k-kaddal/omni/x/ethbridge"
+	ethbridgemodulekeeper "github.com/k-kaddal/omni/x/ethbridge/keeper"
+	ethbridgemoduletypes "github.com/k-kaddal/omni/x/ethbridge/types"
 	omnimodule "github.com/k-kaddal/omni/x/omni"
 	omnimodulekeeper "github.com/k-kaddal/omni/x/omni/keeper"
 	omnimoduletypes "github.com/k-kaddal/omni/x/omni/types"
@@ -158,6 +161,7 @@ var (
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		omnimodule.AppModuleBasic{},
+		ethbridgemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -231,6 +235,8 @@ type App struct {
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
 	OmniKeeper omnimodulekeeper.Keeper
+
+	EthbridgeKeeper ethbridgemodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -268,6 +274,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		omnimoduletypes.StoreKey,
+		ethbridgemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -397,6 +404,14 @@ func New(
 	)
 	omniModule := omnimodule.NewAppModule(appCodec, app.OmniKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.EthbridgeKeeper = *ethbridgemodulekeeper.NewKeeper(
+		appCodec,
+		keys[ethbridgemoduletypes.StoreKey],
+		keys[ethbridgemoduletypes.MemStoreKey],
+		app.GetSubspace(ethbridgemoduletypes.ModuleName),
+	)
+	ethbridgeModule := ethbridgemodule.NewAppModule(appCodec, app.EthbridgeKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -439,6 +454,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		omniModule,
+		ethbridgeModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -467,6 +483,7 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
+		ethbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -491,6 +508,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
+		ethbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -520,6 +538,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
+		ethbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -545,6 +564,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		omniModule,
+		ethbridgeModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -735,6 +755,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(omnimoduletypes.ModuleName)
+	paramsKeeper.Subspace(ethbridgemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

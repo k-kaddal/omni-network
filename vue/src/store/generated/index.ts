@@ -20,6 +20,7 @@ import CosmosIbcGoIbcCoreChannelV1 from './cosmos/ibc-go/ibc.core.channel.v1'
 import CosmosIbcGoIbcCoreClientV1 from './cosmos/ibc-go/ibc.core.client.v1'
 import CosmosIbcGoIbcCoreConnectionV1 from './cosmos/ibc-go/ibc.core.connection.v1'
 import CosmosIbcGoIbcCorePortV1 from './cosmos/ibc-go/ibc.core.port.v1'
+import KKaddalOmniKkaddalOmniEthbridge from './k-kaddal/omni/kkaddal.omni.ethbridge'
 import KKaddalOmniKkaddalOmniOmni from './k-kaddal/omni/kkaddal.omni.omni'
 
 
@@ -44,6 +45,7 @@ export default {
   CosmosIbcGoIbcCoreClientV1: load(CosmosIbcGoIbcCoreClientV1, 'ibc.core.client.v1'),
   CosmosIbcGoIbcCoreConnectionV1: load(CosmosIbcGoIbcCoreConnectionV1, 'ibc.core.connection.v1'),
   CosmosIbcGoIbcCorePortV1: load(CosmosIbcGoIbcCorePortV1, 'ibc.core.port.v1'),
+  KKaddalOmniKkaddalOmniEthbridge: load(KKaddalOmniKkaddalOmniEthbridge, 'kkaddal.omni.ethbridge'),
   KKaddalOmniKkaddalOmniOmni: load(KKaddalOmniKkaddalOmniOmni, 'kkaddal.omni.omni'),
   
 }
