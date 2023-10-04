@@ -1,0 +1,14 @@
+syntax = "proto3";
+package kkaddal.omni.omni;
+
+import "gogoproto/gogo.proto";
+import "omni/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/k-kaddal/omni/x/omni/types";
+
+// GenesisState defines the omni module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
