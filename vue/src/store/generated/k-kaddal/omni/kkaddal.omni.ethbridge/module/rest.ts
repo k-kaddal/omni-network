@@ -16,6 +16,10 @@ export interface EthbridgeMetadata {
   blockNumber?: string;
 }
 
+export interface EthbridgeMsgStoreStateResponse {
+  state?: EthbridgeState;
+}
+
 /**
  * Params defines the parameters for the module.
  */

@@ -49519,6 +49519,31 @@ definitions:
         type: string
       blockNumber:
         type: string
+  kkaddal.omni.ethbridge.MsgStoreStateResponse:
+    type: object
+    properties:
+      state:
+        type: object
+        properties:
+          address:
+            type: string
+          slot:
+            type: string
+          balance:
+            type: string
+          data:
+            type: string
+          metadata:
+            type: object
+            properties:
+              index:
+                type: string
+              address:
+                type: string
+              timestamp:
+                type: string
+              blockNumber:
+                type: string
   kkaddal.omni.ethbridge.Params:
     type: object
     description: Params defines the parameters for the module.
