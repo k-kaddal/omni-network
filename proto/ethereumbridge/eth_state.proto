@@ -1,0 +1,15 @@
+syntax = "proto3";
+package kkaddal.omni.ethereumbridge;
+
+option go_package = "github.com/k-kaddal/omni/x/ethereumbridge/types";
+
+message EthState {
+  string index = 1; 
+  string address = 2; 
+  string slot = 3; 
+  string balance = 4; 
+  string storage = 5; 
+  string blocknumber = 6; 
+  
+}
+

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package kkaddal.omni.ethereumbridge;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "ethereumbridge/eth_state.proto";
+
+option go_package = "github.com/k-kaddal/omni/x/ethereumbridge/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc StoreState(MsgStoreState) returns (MsgStoreStateResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgStoreState {
+  string creator = 1;
+  string address = 2;
+  string slot = 3;
+}
+
+message MsgStoreStateResponse {
+  EthState ethState = 1;
+}
+
+// this line is used by starport scaffolding # proto/tx/message

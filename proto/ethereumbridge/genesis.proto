@@ -1,0 +1,16 @@
+syntax = "proto3";
+package kkaddal.omni.ethereumbridge;
+
+import "gogoproto/gogo.proto";
+import "ethereumbridge/params.proto";
+import "ethereumbridge/eth_state.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/k-kaddal/omni/x/ethereumbridge/types";
+
+// GenesisState defines the ethereumbridge module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated EthState ethStateList = 2 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

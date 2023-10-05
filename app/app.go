@@ -100,9 +100,9 @@ import (
 
 	"github.com/k-kaddal/omni/docs"
 
-	ethbridgemodule "github.com/k-kaddal/omni/x/ethbridge"
-	ethbridgemodulekeeper "github.com/k-kaddal/omni/x/ethbridge/keeper"
-	ethbridgemoduletypes "github.com/k-kaddal/omni/x/ethbridge/types"
+	ethereumbridgemodule "github.com/k-kaddal/omni/x/ethereumbridge"
+	ethereumbridgemodulekeeper "github.com/k-kaddal/omni/x/ethereumbridge/keeper"
+	ethereumbridgemoduletypes "github.com/k-kaddal/omni/x/ethereumbridge/types"
 	omnimodule "github.com/k-kaddal/omni/x/omni"
 	omnimodulekeeper "github.com/k-kaddal/omni/x/omni/keeper"
 	omnimoduletypes "github.com/k-kaddal/omni/x/omni/types"
@@ -161,7 +161,7 @@ var (
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		omnimodule.AppModuleBasic{},
-		ethbridgemodule.AppModuleBasic{},
+		ethereumbridgemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -236,7 +236,8 @@ type App struct {
 
 	OmniKeeper omnimodulekeeper.Keeper
 
-	EthbridgeKeeper ethbridgemodulekeeper.Keeper
+
+	EthereumbridgeKeeper ethereumbridgemodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -274,7 +275,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		omnimoduletypes.StoreKey,
-		ethbridgemoduletypes.StoreKey,
+		ethereumbridgemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -404,13 +405,13 @@ func New(
 	)
 	omniModule := omnimodule.NewAppModule(appCodec, app.OmniKeeper, app.AccountKeeper, app.BankKeeper)
 
-	app.EthbridgeKeeper = *ethbridgemodulekeeper.NewKeeper(
+	app.EthereumbridgeKeeper = *ethereumbridgemodulekeeper.NewKeeper(
 		appCodec,
-		keys[ethbridgemoduletypes.StoreKey],
-		keys[ethbridgemoduletypes.MemStoreKey],
-		app.GetSubspace(ethbridgemoduletypes.ModuleName),
+		keys[ethereumbridgemoduletypes.StoreKey],
+		keys[ethereumbridgemoduletypes.MemStoreKey],
+		app.GetSubspace(ethereumbridgemoduletypes.ModuleName),
 	)
-	ethbridgeModule := ethbridgemodule.NewAppModule(appCodec, app.EthbridgeKeeper, app.AccountKeeper, app.BankKeeper)
+	ethereumbridgeModule := ethereumbridgemodule.NewAppModule(appCodec, app.EthereumbridgeKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -454,7 +455,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		omniModule,
-		ethbridgeModule,
+		ethereumbridgeModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -483,7 +484,7 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
-		ethbridgemoduletypes.ModuleName,
+		ethereumbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -508,7 +509,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
-		ethbridgemoduletypes.ModuleName,
+		ethereumbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -538,7 +539,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		omnimoduletypes.ModuleName,
-		ethbridgemoduletypes.ModuleName,
+		ethereumbridgemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -564,7 +565,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		omniModule,
-		ethbridgeModule,
+		ethereumbridgeModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -755,7 +756,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(omnimoduletypes.ModuleName)
-	paramsKeeper.Subspace(ethbridgemoduletypes.ModuleName)
+	paramsKeeper.Subspace(ethereumbridgemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
