@@ -1,4 +1,4 @@
-# Omni Technical
+# Omni Network
 
 ## To Run:
 

@@ -1,4 +1,4 @@
-# Omni Technical Challenge
+# Omni Network
 
 ## To Run:
 
